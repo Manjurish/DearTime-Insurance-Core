@@ -1,0 +1,45 @@
+id: 18768
+name: DearTime
+environments:
+    development:
+        memory: 1024
+        storage: dt-insurance-dev-bucket
+        gateway-version: 2
+        cli-memory: 2048
+        cli-timeout: 900
+        timeout: 300
+        runtime: docker
+        build:
+            - 'composer install'
+            - 'php artisan event:cache'
+    production:
+        memory: 2048
+        cli-memory: 512
+        runtime: 'php-8.0:al2'
+        build:
+            - 'COMPOSER_MIRROR_PATH_REPOS=1 composer install --no-dev'
+            - 'php artisan event:cache'
+            - 'npm ci && npm run prod && rm -rf node_modules'
+    staging:
+        memory: 1024
+        storage: dt-insurance-staging-bucket
+        gateway-version: 2
+        cli-memory: 2048
+        cli-timeout: 900
+        timeout: 300
+        runtime: docker
+        build:
+            - 'composer install'
+            - 'composer update'
+            - 'php artisan event:cache'
+    test:
+        memory: 1024
+        storage: dt-insurance-dev-bucket
+        gateway-version: 2
+        cli-memory: 2048
+        cli-timeout: 900
+        timeout: 300
+        runtime: docker
+        build:
+            - 'composer install'
+            - 'php artisan event:cache'

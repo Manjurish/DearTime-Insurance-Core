@@ -1,0 +1,797 @@
+{
+    "Have you been medically advised, treated or diagnosed with (select at least one):":[
+       {
+          "id":0,
+          "answer_title":"Heart Disease",
+          "parent_uws_id":-1,
+          "group_title":"Have you been medically advised, treated or diagnosed with (select at least one):",
+          "group_id":1
+       },
+       {
+          "id":64,
+          "answer_title":"heart attack",
+          "parent_uws_id":0,
+          "group_id":1
+       },
+       {
+          "id":65,
+          "answer_title":"chest pain",
+          "parent_uws_id":0,
+          "group_id":1
+       },
+       {
+          "id":66,
+          "answer_title":"heart valve problem",
+          "parent_uws_id":0,
+          "group_id":1
+       },
+       {
+          "id":67,
+          "answer_title":"others",
+          "parent_uws_id":0,
+          "group_id":1
+       },
+       {
+          "id":1,
+          "answer_title":"Hypertension",
+          "parent_uws_id":-1,
+          "group_title":"Have you been medically advised, treated or diagnosed with (select at least one):",
+          "group_id":1
+       },
+       {
+          "id":72,
+          "answer_title":"high blood pressure",
+          "parent_uws_id":1,
+          "group_id":1
+       },
+       {
+          "id":3,
+          "answer_title":"Hypercholesterolemia",
+          "parent_uws_id":-1,
+          "group_title":"Have you been medically advised, treated or diagnosed with (select at least one):",
+          "group_id":1
+       },
+       {
+          "id":73,
+          "answer_title":"high cholesterol",
+          "parent_uws_id":3,
+          "group_id":1
+       },
+       {
+          "id":4,
+          "answer_title":"Diabetes",
+          "parent_uws_id":-1,
+          "group_title":"Have you been medically advised, treated or diagnosed with (select at least one):",
+          "group_id":1
+       },
+       {
+          "id":74,
+          "answer_title":"high blood sugar",
+          "parent_uws_id":4,
+          "group_id":1
+       },
+       {
+          "id":75,
+          "answer_title":"sugar in urine",
+          "parent_uws_id":4,
+          "group_id":1
+       },
+       {
+          "id":8,
+          "answer_title":"Tumour",
+          "parent_uws_id":-1,
+          "group_title":"Have you been medically advised, treated or diagnosed with (select at least one):",
+          "group_id":1
+       },
+       {
+          "id":76,
+          "answer_title":"cancer",
+          "parent_uws_id":8,
+          "group_id":1
+       },
+       {
+          "id":77,
+          "answer_title":"lump",
+          "parent_uws_id":8,
+          "group_id":1
+       },
+       {
+          "id":78,
+          "answer_title":"cyst",
+          "parent_uws_id":8,
+          "group_id":1
+       },
+       {
+          "id":79,
+          "answer_title":"abnormal growth ",
+          "parent_uws_id":8,
+          "group_id":1
+       },
+       {
+          "id":12,
+          "answer_title":"Liver Disease",
+          "parent_uws_id":-1,
+          "group_title":"Have you been medically advised, treated or diagnosed with (select at least one):",
+          "group_id":1
+       },
+       {
+          "id":68,
+          "answer_title":"hepatitis B",
+          "parent_uws_id":12,
+          "group_id":1
+       },
+       {
+          "id":69,
+          "answer_title":"hepatitis C",
+          "parent_uws_id":12,
+          "group_id":1
+       },
+       {
+          "id":70,
+          "answer_title":"cirrhosis",
+          "parent_uws_id":12,
+          "group_id":1
+       },
+       {
+          "id":71,
+          "answer_title":"others",
+          "parent_uws_id":12,
+          "group_id":1
+       },
+       {
+          "id":13,
+          "answer_title":"Mental Health Problem",
+          "parent_uws_id":-1,
+          "group_title":"Have you been medically advised, treated or diagnosed with (select at least one):",
+          "group_id":1
+       },
+       {
+          "id":80,
+          "answer_title":"depression",
+          "parent_uws_id":13,
+          "group_id":1
+       },
+       {
+          "id":81,
+          "answer_title":"anxiety",
+          "parent_uws_id":13,
+          "group_id":1
+       },
+       {
+          "id":82,
+          "answer_title":"schizophrenia",
+          "parent_uws_id":13,
+          "group_id":1
+       },
+       {
+          "id":83,
+          "answer_title":"others",
+          "parent_uws_id":13,
+          "group_id":1
+       },
+       {
+          "id":14,
+          "answer_title":"HIV / AIDS",
+          "parent_uws_id":-1,
+          "group_title":"Have you been medically advised, treated or diagnosed with (select at least one):",
+          "group_id":1
+       },
+       {
+          "id":16,
+          "answer_title":"Alcoholism",
+          "parent_uws_id":-1,
+          "group_title":"Have you been medically advised, treated or diagnosed with (select at least one):",
+          "group_id":1
+       },
+       {
+          "id":17,
+          "answer_title":"Drug Abuse",
+          "parent_uws_id":-1,
+          "group_title":"Have you been medically advised, treated or diagnosed with (select at least one):",
+          "group_id":1
+       },
+       {
+          "id":18,
+          "answer_title":"Physical Defect",
+          "parent_uws_id":-1,
+          "group_title":"Have you been medically advised, treated or diagnosed with (select at least one):",
+          "group_id":1
+       },
+       {
+          "id":19,
+          "answer_title":"Congenital Abnormality",
+          "parent_uws_id":-1,
+          "group_title":"Have you been medically advised, treated or diagnosed with (select at least one):",
+          "group_id":1
+       },
+       {
+          "id":34,
+          "answer_title":"None of the above",
+          "parent_uws_id":-1,
+          "group_title":"Have you been medically advised, treated or diagnosed with (select at least one):",
+          "group_id":1
+       }
+    ],
+    "Have you ever had disorders of (select at least one):":[
+       {
+          "id":20,
+          "answer_title":"Blood",
+          "parent_uws_id":-1,
+          "group_title":"Have you ever had disorders of (select at least one):",
+          "group_id":2
+       },
+       {
+          "id":90,
+          "answer_title":"anaemia",
+          "parent_uws_id":20,
+          "group_id":2
+       },
+       {
+          "id":91,
+          "answer_title":"thalassemia major",
+          "parent_uws_id":20,
+          "group_id":2
+       },
+       {
+          "id":92,
+          "answer_title":"hemophilia",
+          "parent_uws_id":20,
+          "group_id":2
+       },
+       {
+          "id":93,
+          "answer_title":"others",
+          "parent_uws_id":20,
+          "group_id":2
+       },
+       {
+          "id":21,
+          "answer_title":"Breathing / lung",
+          "parent_uws_id":-1,
+          "group_title":"Have you ever had disorders of (select at least one):",
+          "group_id":2
+       },
+       {
+          "id":84,
+          "answer_title":"asthma",
+          "parent_uws_id":21,
+          "group_id":2
+       },
+       {
+          "id":85,
+          "answer_title":"tuberculosis",
+          "parent_uws_id":21,
+          "group_id":2
+       },
+       {
+          "id":86,
+          "answer_title":"emphysema",
+          "parent_uws_id":21,
+          "group_id":2
+       },
+       {
+          "id":87,
+          "answer_title":"others",
+          "parent_uws_id":21,
+          "group_id":2
+       },
+       {
+          "id":22,
+          "answer_title":"Kidney / Urinary",
+          "parent_uws_id":-1,
+          "group_title":"Have you ever had disorders of (select at least one):",
+          "group_id":2
+       },
+       {
+          "id":94,
+          "answer_title":"kidney failure",
+          "parent_uws_id":22,
+          "group_id":2
+       },
+       {
+          "id":95,
+          "answer_title":"kidney stone",
+          "parent_uws_id":22,
+          "group_id":2
+       },
+       {
+          "id":96,
+          "answer_title":"nephritis",
+          "parent_uws_id":22,
+          "group_id":2
+       },
+       {
+          "id":97,
+          "answer_title":"others",
+          "parent_uws_id":22,
+          "group_id":2
+       },
+       {
+          "id":23,
+          "answer_title":"Digestive System",
+          "parent_uws_id":-1,
+          "group_title":"Have you ever had disorders of (select at least one):",
+          "group_id":2
+       },
+       {
+          "id":98,
+          "answer_title":"stomach",
+          "parent_uws_id":23,
+          "group_id":2
+       },
+       {
+          "id":99,
+          "answer_title":"bowel",
+          "parent_uws_id":23,
+          "group_id":2
+       },
+       {
+          "id":100,
+          "answer_title":"gall bladder",
+          "parent_uws_id":23,
+          "group_id":2
+       },
+       {
+          "id":101,
+          "answer_title":"pancreas",
+          "parent_uws_id":23,
+          "group_id":2
+       },
+       {
+          "id":102,
+          "answer_title":"gastric ulcer",
+          "parent_uws_id":23,
+          "group_id":2
+       },
+       {
+          "id":103,
+          "answer_title":"small intestine",
+          "parent_uws_id":23,
+          "group_id":2
+       },
+       {
+          "id":104,
+          "answer_title":"gastritis",
+          "parent_uws_id":23,
+          "group_id":2
+       },
+       {
+          "id":131,
+          "answer_title":"others",
+          "parent_uws_id":23,
+          "group_id":2
+       },
+       {
+          "id":24,
+          "answer_title":"Neurological",
+          "parent_uws_id":-1,
+          "group_title":"Have you ever had disorders of (select at least one):",
+          "group_id":2
+       },
+       {
+          "id":105,
+          "answer_title":"epilepsy",
+          "parent_uws_id":24,
+          "group_id":2
+       },
+       {
+          "id":106,
+          "answer_title":"paralysis",
+          "parent_uws_id":24,
+          "group_id":2
+       },
+       {
+          "id":107,
+          "answer_title":"multiple sclerosis",
+          "parent_uws_id":24,
+          "group_id":2
+       },
+       {
+          "id":108,
+          "answer_title":"others",
+          "parent_uws_id":24,
+          "group_id":2
+       },
+       {
+          "id":25,
+          "answer_title":"Musculoskeletal / Joint",
+          "parent_uws_id":-1,
+          "group_title":"Have you ever had disorders of (select at least one):",
+          "group_id":2
+       },
+       {
+          "id":109,
+          "answer_title":"osteoporosis",
+          "parent_uws_id":25,
+          "group_id":2
+       },
+       {
+          "id":110,
+          "answer_title":"arthritis",
+          "parent_uws_id":25,
+          "group_id":2
+       },
+       {
+          "id":111,
+          "answer_title":"gout",
+          "parent_uws_id":25,
+          "group_id":2
+       },
+       {
+          "id":112,
+          "answer_title":"others",
+          "parent_uws_id":25,
+          "group_id":2
+       },
+       {
+          "id":26,
+          "answer_title":"Brain / Nerve",
+          "parent_uws_id":-1,
+          "group_title":"Have you ever had disorders of (select at least one):",
+          "group_id":2
+       },
+       {
+          "id":113,
+          "answer_title":"stroke",
+          "parent_uws_id":26,
+          "group_id":2
+       },
+       {
+          "id":114,
+          "answer_title":"alzheimer",
+          "parent_uws_id":26,
+          "group_id":2
+       },
+       {
+          "id":115,
+          "answer_title":"parkinson",
+          "parent_uws_id":26,
+          "group_id":2
+       },
+       {
+          "id":116,
+          "answer_title":"others",
+          "parent_uws_id":26,
+          "group_id":2
+       },
+       {
+          "id":27,
+          "answer_title":"Thyroid",
+          "parent_uws_id":-1,
+          "group_title":"Have you ever had disorders of (select at least one):",
+          "group_id":2
+       },
+       {
+          "id":28,
+          "answer_title":"Prostate",
+          "parent_uws_id":-1,
+          "group_title":"Have you ever had disorders of (select at least one):",
+          "group_id":2
+       },
+       {
+          "id":29,
+          "answer_title":"Eyes",
+          "parent_uws_id":-1,
+          "group_title":"Have you ever had disorders of (select at least one):",
+          "group_id":2
+       },
+       {
+          "id":30,
+          "answer_title":"Ears",
+          "parent_uws_id":-1,
+          "group_title":"Have you ever had disorders of (select at least one):",
+          "group_id":2
+       },
+       {
+          "id":31,
+          "answer_title":"Nose",
+          "parent_uws_id":-1,
+          "group_title":"Have you ever had disorders of (select at least one):",
+          "group_id":2
+       },
+       {
+          "id":32,
+          "answer_title":"Throat",
+          "parent_uws_id":-1,
+          "group_title":"Have you ever had disorders of (select at least one):",
+          "group_id":2
+       },
+       {
+          "id":33,
+          "answer_title":"Hereditary",
+          "parent_uws_id":-1,
+          "group_title":"Have you ever had disorders of (select at least one):",
+          "group_id":2
+       },
+       {
+          "id":35,
+          "answer_title":"Female Organ",
+          "parent_uws_id":-1,
+          "group_title":"Have you ever had disorders of (select at least one):",
+          "group_id":2
+       },
+       {
+          "id":117,
+          "answer_title":"breast",
+          "parent_uws_id":35,
+          "group_id":2
+       },
+       {
+          "id":118,
+          "answer_title":"ovary",
+          "parent_uws_id":35,
+          "group_id":2
+       },
+       {
+          "id":119,
+          "answer_title":"uterus",
+          "parent_uws_id":35,
+          "group_id":2
+       },
+       {
+          "id":120,
+          "answer_title":"others",
+          "parent_uws_id":35,
+          "group_id":2
+       },
+       {
+          "id":53,
+          "answer_title":"None of the above",
+          "parent_uws_id":-1,
+          "group_title":"Have you ever had disorders of (select at least one):",
+          "group_id":2
+       }
+    ],
+    "Do you have at least 2 parents / siblings by age 50 with (select at least one):":[
+       {
+          "id":36,
+          "answer_title":"Heart Disease",
+          "parent_uws_id":-1,
+          "group_title":"Do you have at least 2 parents / siblings by age 50 with (select at least one):",
+          "group_id":3
+       },
+       {
+          "id":37,
+          "answer_title":"Kidney Disease",
+          "parent_uws_id":-1,
+          "group_title":"Do you have at least 2 parents / siblings by age 50 with (select at least one):",
+          "group_id":3
+       },
+       {
+          "id":38,
+          "answer_title":"Stroke",
+          "parent_uws_id":-1,
+          "group_title":"Do you have at least 2 parents / siblings by age 50 with (select at least one):",
+          "group_id":3
+       },
+       {
+          "id":39,
+          "answer_title":"None of these",
+          "parent_uws_id":-1,
+          "group_title":"Do you have at least 2 parents / siblings by age 50 with (select at least one):",
+          "group_id":3
+       },
+       {
+          "id":40,
+          "answer_title":"Diabetes",
+          "parent_uws_id":-1,
+          "group_title":"Do you have at least 2 parents / siblings by age 50 with (select at least one):",
+          "group_id":3
+       },
+       {
+          "id":55,
+          "answer_title":"Cancer",
+          "parent_uws_id":-1,
+          "group_title":"Do you have at least 2 parents / siblings by age 50 with (select at least one):",
+          "group_id":3
+       }
+    ],
+    "Do you participate in (select at least one):":[
+       {
+          "id":41,
+          "answer_title":"Competitive Racing",
+          "parent_uws_id":-1,
+          "group_title":"Do you participate in (select at least one):",
+          "group_id":4
+       },
+       {
+          "id":121,
+          "answer_title":"car",
+          "parent_uws_id":41,
+          "group_id":4
+       },
+       {
+          "id":122,
+          "answer_title":"bike",
+          "parent_uws_id":41,
+          "group_id":4
+       },
+       {
+          "id":123,
+          "answer_title":"powerboat",
+          "parent_uws_id":41,
+          "group_id":4
+       },
+       {
+          "id":124,
+          "answer_title":"others",
+          "parent_uws_id":41,
+          "group_id":4
+       },
+       {
+          "id":42,
+          "answer_title":"Self Launch Flying",
+          "parent_uws_id":-1,
+          "group_title":"Do you participate in (select at least one):",
+          "group_id":4
+       },
+       {
+          "id":88,
+          "answer_title":"hang gliding",
+          "parent_uws_id":42,
+          "group_id":4
+       },
+       {
+          "id":89,
+          "answer_title":"others",
+          "parent_uws_id":42,
+          "group_id":4
+       },
+       {
+          "id":43,
+          "answer_title":"Hunting",
+          "parent_uws_id":-1,
+          "group_title":"Do you participate in (select at least one):",
+          "group_id":4
+       },
+       {
+          "id":44,
+          "answer_title":"Mountaineering",
+          "parent_uws_id":-1,
+          "group_title":"Do you participate in (select at least one):",
+          "group_id":4
+       },
+       {
+          "id":125,
+          "answer_title":"outdoor rock climbing",
+          "parent_uws_id":44,
+          "group_id":4
+       },
+       {
+          "id":126,
+          "answer_title":"abseiling",
+          "parent_uws_id":44,
+          "group_id":4
+       },
+       {
+          "id":127,
+          "answer_title":"caving",
+          "parent_uws_id":44,
+          "group_id":4
+       },
+       {
+          "id":48,
+          "answer_title":"Private Flying",
+          "parent_uws_id":-1,
+          "group_title":"Do you participate in (select at least one):",
+          "group_id":4
+       },
+       {
+          "id":128,
+          "answer_title":"fixed wing",
+          "parent_uws_id":48,
+          "group_id":4
+       },
+       {
+          "id":129,
+          "answer_title":"helicopter",
+          "parent_uws_id":48,
+          "group_id":4
+       },
+       {
+          "id":130,
+          "answer_title":"others",
+          "parent_uws_id":48,
+          "group_id":4
+       },
+       {
+          "id":49,
+          "answer_title":"Scuba Diving >30m",
+          "parent_uws_id":-1,
+          "group_title":"Do you participate in (select at least one):",
+          "group_id":4
+       },
+       {
+          "id":50,
+          "answer_title":"Skydiving / Parachuting",
+          "parent_uws_id":-1,
+          "group_title":"Do you participate in (select at least one):",
+          "group_id":4
+       },
+       {
+          "id":51,
+          "answer_title":"White Water Rafting  Grade 4",
+          "parent_uws_id":-1,
+          "group_title":"Do you participate in (select at least one):",
+          "group_id":4
+       },
+       {
+          "id":52,
+          "answer_title":"None of the above",
+          "parent_uws_id":-1,
+          "group_title":"Do you participate in (select at least one):",
+          "group_id":4
+       },
+       {
+          "id":54,
+          "answer_title":"Competitive Boxing",
+          "parent_uws_id":-1,
+          "group_title":"Do you participate in (select at least one):",
+          "group_id":4
+       }
+    ],
+    "Have you been rejected or charged with loading / exclusion for your other insurances?":[
+       {
+          "id":56,
+          "answer_title":"Yes",
+          "parent_uws_id":-1,
+          "group_title":"Have you been rejected or charged with loading / exclusion for your other insurances?",
+          "group_id":5
+       },
+       {
+          "id":57,
+          "answer_title":"No",
+          "parent_uws_id":-1,
+          "group_title":"Have you been rejected or charged with loading exclusion for your other insurances?",
+          "group_id":5
+       }
+    ],
+    "Any pending investigation or surgery to be done?":[
+       {
+          "id":58,
+          "answer_title":"Yes",
+          "parent_uws_id":-1,
+          "group_title":"Any pending investigation or surgery to be done?",
+          "group_id":6
+       },
+       {
+          "id":59,
+          "answer_title":"No",
+          "parent_uws_id":-1,
+          "group_title":"Any pending investigation or surgery to be done?",
+          "group_id":6
+       }
+    ],
+    "Have you ever been hospitalised for at least 1 week consecutively?":[
+       {
+          "id":60,
+          "answer_title":"Yes",
+          "parent_uws_id":-1,
+          "group_title":"Have you ever been hospitalised for at least 1 week consecutively?",
+          "group_id":7
+       },
+       {
+          "id":61,
+          "answer_title":"No",
+          "parent_uws_id":-1,
+          "group_title":"Have you ever been hospitalised for at least 1 week consecutively?",
+          "group_id":7
+       }
+    ],
+    "Was the child born prematured (pre-term before 37 weeks)?":[
+       {
+          "id":62,
+          "answer_title":"Yes",
+          "parent_uws_id":-1,
+          "group_title":"Was the child born prematured (pre-term before 37 weeks)?",
+          "group_id":8
+       },
+       {
+          "id":63,
+          "answer_title":"No",
+          "parent_uws_id":-1,
+          "group_title":"Was the child born prematured (pre-term before 37 weeks)?",
+          "group_id":8
+       }
+    ]
+ }

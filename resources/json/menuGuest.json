@@ -1,0 +1,5 @@
+{"menu": [
+    {"route":"login", "name":"login", "icon":"feather icon-user"},
+    {"route":"register", "name":"register", "icon":"feather icon-users"}
+]
+}

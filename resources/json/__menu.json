@@ -1,0 +1,83 @@
+{
+  "menu": [
+    {
+      "route": "admin.dashboard.main",
+      "name": "Dashboard",
+      "icon": "feather icon-briefcase"
+    },
+    {
+      "route": "admin.InternalUser.index",
+      "name": "Users",
+      "icon": "feather icon-user",
+      "submenu": [
+        {
+          "route": "admin.InternalUser.index",
+          "name": "Users List",
+          "icon": "feather icon-list"
+        },
+        {
+          "route": "admin.Role.index",
+          "name": "Roles List",
+          "icon": "feather icon-list"
+        }
+      ]
+    },
+    {
+      "route": "admin.User.index",
+      "name": "Customers",
+      "icon": "feather icon-users",
+      "submenu": [
+        {
+          "route": "admin.User.index",
+          "name": "Customers List",
+          "icon": "feather icon-list"
+        },
+        {
+          "route": "admin.Verification.index",
+          "name": "eKYC",
+          "icon": "feather icon-users"
+        },
+        {
+          "route": "admin.CharityApplicant.index",
+          "name": "Applicants List",
+          "icon": "feather icon-list"
+        },
+        {
+          "route": "admin.Underwriting.index",
+          "name": "Underwritings",
+          "icon": "feather icon-layers"
+        }
+      ]
+    },
+    {
+      "route": "admin.claim.index",
+      "name": "Claim",
+      "icon": "feather icon-users"
+    },
+    {
+      "route": "admin.SanctionScreen.index",
+      "name": "Screening",
+      "icon": "feather icon-search"
+    },
+    {
+      "route": "admin.reports.index",
+      "name": "Reporting",
+      "icon": "feather icon-bar-chart-line"
+    },
+    {
+      "route": "admin.Payment.index",
+      "name": "Transactions",
+      "icon": "feather icon-dollar-sign"
+    },
+    {
+      "route": "admin.Coverage.index",
+      "name": "Coverages",
+      "icon": "feather icon-layers"
+    },
+    {
+      "route": "admin.Notification.create",
+      "name": "Notification",
+      "icon": "feather icon-mail"
+    }
+  ]
+}

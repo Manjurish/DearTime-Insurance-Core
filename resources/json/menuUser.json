@@ -1,0 +1,46 @@
+{"menu": [
+    {"route":"userpanel.dashboard.main", "name":"dashboard", "icon":"feather icon-briefcase"},
+    {"route":"userpanel.dashboard.profile", "name":"account", "icon":"feather icon-user",
+        "submenu": [
+            {"route":"userpanel.dashboard.profile", "name":"account_details", "icon":"feather icon-user"},
+            {"route":"userpanel.child.index", "name":"children_age_16", "icon":"feather icon-user"},
+
+            {"route":"userpanel.account.change-password", "name":"account_information", "icon":"feather icon-user",
+                "submenu":
+                [
+                    {"route":"userpanel.account.change-password", "name":"change_password", "icon":"feather icon-lock"},
+                    {"route":"userpanel.account.change-email", "name":"change_email", "icon":"feather icon-lock"},
+                    {"route":"userpanel.account.change-mobile", "name":"change_mobile", "icon":"feather icon-lock"}
+                ]
+            },
+            {"route":"userpanel.MedicalSurvey.index" ,"extra":"?mn=1", "name":"medical_survey", "icon":"feather icon-shopping-cart"},
+            {"route":"userpanel.Beneficiary.index"   ,"extra":"?mn=1", "name":"beneficiary", "icon":"feather icon-shopping-cart"},
+            {"route":"userpanel.Thanksgiving.index"  ,"extra":"?mn=1", "name":"thanksgiving", "icon":"feather icon-shopping-cart"},
+            {"route":"userpanel.bank_card.index"     ,"extra":"?mn=1", "name":"payment_details", "icon":"feather icon-credit-card"},
+            {"route":"userpanel.bank_account.index"  ,"extra":"?mn=1", "name":"bank_account", "icon":"feather icon-credit-card"},
+            {"route":"userpanel.Verification.index"  ,"extra":"?mn=1", "name":"ekyc", "icon":"feather icon-shield"},
+            {"route":"userpanel.history.index", "name":"payment_history", "icon":"feather icon-credit-card"},
+            {"route":"userpanel.MedicalSurvey.index","extra":"?fill-by-clinic", "name":"panel_clinics", "icon":"feather icon-shopping-cart"},
+            {"route":"userpanel.setting.index", "name":"settings", "icon":"feather icon-heart",
+                "submenu":
+                [
+                    {"route":"userpanel.setting.language", "name":"change_language", "icon":"feather icon-shopping-cart",
+                        "submenu":
+                        [
+                            {"route":"userpanel.setting.language","extra":"?set_locale=en", "name":"en", "icon":"feather icon-shopping-cart"},
+                            {"route":"userpanel.setting.language","extra":"?set_locale=bm", "name":"bm", "icon":"feather icon-shopping-cart"},
+                            {"route":"userpanel.setting.language","extra":"?set_locale=ch", "name":"ch", "icon":"feather icon-shopping-cart"}
+                        ]}
+                ]
+            }
+
+        ]
+    },
+    {"route":"userpanel.policies.index", "name":"policy", "icon":"feather icon-user-plus"},
+    {"route":"userpanel.promote.index", "name":"promoter", "icon":"feather icon-credit-card"},
+    {"route":"userpanel.time-tube.index", "name":"time_tube", "icon":"feather icon-credit-card"},
+    {"route":"userpanel.sponsor.index", "name":"charity_insurance", "icon":"feather icon-heart"},
+    {"route":"userpanel.claim.index", "name":"claim", "icon":"feather icon-user-plus"}
+
+]
+}

@@ -1,0 +1,643 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Action;
+use App\Helpers\Enum;
+use App\Http\Controllers\Controller;
+use App\Individual;
+use App\Underwriting;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
+class ReportController extends Controller
+{
+	public function index()
+	{
+		$minYearIndividual = $maxYearIndividual = $minYearUnderwriting = $maxYearUnderwriting = NULL;
+
+		if (!empty(Individual::first())) {
+			$minYearIndividual = Carbon::parse(Individual::select('created_at')->orderBy('created_at', 'asc')->first()->created_at)->year;
+			$maxYearIndividual = Carbon::parse(Individual::select('created_at')->orderBy('created_at', 'desc')->first()->created_at)->year;
+		}
+
+		if (!empty(Underwriting::first())) {
+			$minYearUnderwriting = Carbon::parse(Underwriting::select('created_at')->orderBy('created_at', 'asc')->first()->created_at)->year;
+			$maxYearUnderwriting = Carbon::parse(Underwriting::select('created_at')->orderBy('created_at', 'desc')->first()->created_at)->year;
+		}
+
+		$breadcrumbs = [
+			['name' => 'Admin Area', 'link' => route('admin.dashboard.main')],
+			['name' => 'Reporting', 'link' => url()->current()],
+		];
+
+		return view('admin.reports.index', compact('breadcrumbs', 'minYearUnderwriting', 'maxYearUnderwriting', 'minYearIndividual', 'maxYearIndividual'));
+	}
+
+	public function insurancePenetration(Request $request)
+	{
+		$this->validate($request, [
+			'year' => 'required|date_format:Y',
+		]);
+
+		$year      = $request->get('year');
+		$uninsured = [];
+		$insured   = [];
+
+		for ($month = 1; $month <= 12; $month++) {
+			$uninsured[$month] = Individual::where('has_other_life_insurance', 0)->whereYear('created_at', '=', $year)->whereMonth('created_at', '=', $month)->count();
+
+			$insured[$month] = Individual::where('has_other_life_insurance', 1)->whereYear('created_at', '=', $year)->whereMonth('created_at', '=', $month)->count();
+		}
+
+		//$pathFile    = resource_path('reporting/Penetration_Ratio_V1.0.xlsx');
+		$pathFile    = resource_path('reporting/Penetration_Ratio.xlsx');
+		$columnStart = 'c';
+		$columnEnd   = 'n';
+
+		$spreadsheet = IOFactory::load($pathFile);
+		$sheet       = $spreadsheet->getActiveSheet();
+
+		$index = 1;
+		for ($i = $columnStart; $i <= $columnEnd; $i++) {
+			$sheet->setCellValue($i . 10, $uninsured[$index]);
+			$sheet->setCellValue($i . 11, $insured[$index]);
+			$index++;
+		}
+
+		$sheet->setCellValue('c5', $year);
+
+		$filename = "{$year}-Insurance-Penetration-" . str_replace(".", "", date('d-m-y-' . substr((string)microtime(), 1, 8))) . ".xlsx";
+
+		try {
+			$writer = new Xlsx($spreadsheet);
+			header('X-Vapor-Base64-Encode:true');
+			header('Content-Type: application/vnd.ms-excel');
+			header("Content-Disposition: attachment; filename={$filename}");
+			$writer->save("php://output");
+		} catch (Exception $e) {
+			exit($e->getMessage());
+		}
+	}
+
+	public function underwritingRejection(Request $request)
+	{
+		$this->validate($request, [
+			'year' => 'required|date_format:Y',
+		]);
+
+		$year     = $request->get('year');
+		$rejected = [];
+		$accepted = [];
+
+		for ($month = 1; $month <= 12; $month++) {
+
+			$rejected[$month] = Underwriting::whereHas('coverages', function ($query) {
+				$query->where('state', Enum::COVERAGE_STATE_ACTIVE);
+			})
+				->where('death', 0)
+				->whereYear('created_at', '=', $year)
+				->whereMonth('created_at', '=', $month)
+				->count();
+
+			$accepted[$month] = Underwriting::whereHas('coverages', function ($query) {
+				$query->where('state', Enum::COVERAGE_STATE_ACTIVE);
+			})
+				->where('death', 1)
+				->whereYear('created_at', '=', $year)
+				->whereMonth('created_at', '=', $month)
+				->count();
+		}
+
+		//$pathFile    = resource_path('reporting/UW_Ratio_V1.0.xlsx');
+		$pathFile    = resource_path('reporting/Percentage_of_Decline.xlsx');
+		$columnStart = 'c';
+		$columnEnd   = 'n';
+
+		$spreadsheet = IOFactory::load($pathFile);
+		$sheet       = $spreadsheet->getActiveSheet();
+
+		$index = 1;
+		for ($i = $columnStart; $i <= $columnEnd; $i++) {
+			$sheet->setCellValue($i . 10, $rejected[$index]);
+			$sheet->setCellValue($i . 11, $accepted[$index]);
+			$index++;
+		}
+
+		$sheet->setCellValue('c5', $year);
+
+		$filename = "{$year}-Underwriting-Rejection-" . str_replace(".", "", date('d-m-y-' . substr((string)microtime(), 1, 8))) . ".xlsx";
+
+		try {
+			$writer = new Xlsx($spreadsheet);
+			header('X-Vapor-Base64-Encode:true');
+			header('Content-Type: application/vnd.ms-excel');
+			header("Content-Disposition: attachment; filename={$filename}");
+			$writer->save("php://output");
+		} catch (Exception $e) {
+			exit($e->getMessage());
+		}
+	}
+
+	public function underwritingRejectionAnalysis(Request $request)
+	{
+		$this->validate($request, [
+			'from'     => 'required|date|date_format:Y/m/d|before_or_equal:to',
+			'to'       => 'required|date|date_format:Y/m/d',
+			'accepted' => 'nullable|in:on'
+		]);
+
+		$from     = Carbon::parse($request->input('from'))->startOfDay();
+		$to       = Carbon::parse($request->input('to'))->endOfDay();
+		$accepted = $request->input('accepted');
+
+		$mainQuery = Underwriting::whereBetween('created_at', [$from, $to])
+			->with('individual');
+
+		if ($accepted == 'on') {
+			$data = $mainQuery->get();
+		} else {
+			$data = $mainQuery
+				->where('death', 0)
+				->where('disability', 0)
+				->where('ci', 0)
+				->where('medical', 0)
+				->get();
+		}
+
+		if ($data->count() == 0) {
+			return redirect()->back()->with('error', __('web/messages.no_report'));
+		}
+
+		$breadcrumbs = [
+			['name' => 'Admin Area', 'link' => route('admin.dashboard.main')],
+			['name' => 'Reporting', 'link' => route('admin.reports.index')],
+		];
+
+		return view('admin.reports.underwriting-rejection-analysis', compact('data', 'breadcrumbs'));
+	}
+
+	public function underwritingRejectionAnalysisByUser($uuid)
+	{
+		$underwriting = Underwriting::where('uuid', $uuid)->first();
+
+		$breadcrumbs = [
+			['name' => 'Admin Area', 'link' => route('admin.dashboard.main')],
+			['name' => 'Reporting', 'link' => route('admin.reports.index')],
+			['name' => 'Underwriting Rejection Analysis For ' . $underwriting->individual->name, 'link' => route('admin.reports.underwriting.rejection.analysis.by.user', $underwriting->uuid)],
+		];
+
+		return view('admin.reports.underwriting-rejection-analysis-by-user', compact('underwriting', 'breadcrumbs'));
+	}
+
+	public function exportCsv()
+	{
+		$actions = Action::query()
+			->where('status', Enum::ACTION_STATUS_EXECUTED)
+			//->whereBetween('created_at',[Carbon::now()->startOfDay(),Carbon::now()->endOfDay()])
+			->orderBy('created_at', 'asc')
+			->get();
+
+		if (empty($actions)) {
+			return;
+		}
+		// dump($actions);
+
+		$data        = [];
+		$actionUsers = [];
+		//Missing / Not showing all product related users ex. JASMINE record not displayed
+		//missing record fix
+		$cov_product = [
+			'Critical Illness' => 'CIL',
+			'Death' => 'DTH',
+			'Disability' => 'TPD',
+			'Accident' => 'ADD',
+			'Medical' => 'MED'
+		];
+
+
+
+		foreach ($actions as $action) {
+			if (isset($actionUsers[$action->user_id])) {
+				array_push($actionUsers[$action->user_id], $action->id);
+			} else {
+				$actionUsers[$action->user_id] = [];
+				array_push($actionUsers[$action->user_id], $action->id);
+			}
+		}
+
+		// dump($actionUsers);
+
+
+
+
+		foreach ($actionUsers as $actionUser) {
+			$checkMemberAddition = FALSE;
+			$checkTerminate      = FALSE;
+			$checkAmendment      = FALSE;
+			$checkPlanChange     = FALSE;
+			$oldDeductible       = 0;
+			$gg = 0;
+
+			// dump($actionUser);
+
+
+
+			foreach ($actionUser as $actionId) {
+				$action = Action::find($actionId);
+
+				$coverage = $action->coverages()
+					// ->where('product_name', 'Medical')
+					->whereIn('status', [Enum::COVERAGE_STATE_ACTIVE, Enum::COVERAGE_STATUS_DECREASE_UNPAID])
+					->orderBy('created_at', 'desc')
+					->first();
+
+
+				if (empty($coverage)) {
+					$coverage = $action->user->profile->coverages_owner()
+						// ->where('product_name', 'Medical')
+						->where('state', Enum::COVERAGE_STATE_ACTIVE)
+						->orderBy('created_at', 'desc')
+						->first();
+				}
+
+
+				if (empty($coverage)) {
+					continue;
+				}
+
+				if (!$checkMemberAddition && ($action->type == Enum::ACTION_TYPE_PARTICULAR_CHANGE || $action->type == Enum::ACTION_TYPE_BANK_INFO)) {
+					continue;
+				} else {
+					$checkMemberAddition = TRUE;
+				}
+
+				if ($action->type == Enum::ACTION_TYPE_MEMEBR_ADDITION) {
+					$checkTerminate = FALSE;
+				}
+
+				if (!$checkTerminate) {
+					if (!empty($coverage)) {
+
+						if (!$checkAmendment && ($action->type == Enum::ACTION_TYPE_PARTICULAR_CHANGE || $action->type == Enum::ACTION_TYPE_BANK_INFO)) {
+							$checkAmendment = TRUE;
+						} elseif ($checkAmendment && ($action->type == Enum::ACTION_TYPE_PARTICULAR_CHANGE || $action->type == Enum::ACTION_TYPE_BANK_INFO)) {
+							continue;
+						}
+
+						if (!$checkPlanChange && ($action->type == Enum::ACTION_TYPE_PLAN_CHANGE)) {
+							$checkPlanChange = TRUE;
+							$oldDeductible   = $coverage->deductible;
+						} elseif ($checkPlanChange && ($action->type == Enum::ACTION_TYPE_PLAN_CHANGE) && ($oldDeductible != $coverage->deductible)) {
+							$oldDeductible = $coverage->deductible;
+						} elseif ($checkPlanChange && ($action->type == Enum::ACTION_TYPE_PLAN_CHANGE) && ($oldDeductible == $coverage->deductible)) {
+							continue;
+						}
+
+						if ($action->type == Enum::ACTION_TYPE_PARTICULAR_CHANGE || $action->type == Enum::ACTION_TYPE_BANK_INFO) {
+							$actionType = Enum::ACTION_TYPE_AMENDMENT;
+						} else {
+							$actionType = $action->type;
+						}
+
+						// dump($action->user->profile);
+						// dump($action->user->profile->occupation['job']);
+
+						// dump($action->user->profile->occupation['industry']->first()->name);
+						// dump($coverage);
+
+						$plan = NULL;
+						$plan_description = NULL;
+						if ($coverage->product_name == 'Medical') {
+							$plan = 'Deductible ' . $coverage->deductible;
+							$plan_description = 'Deductible ' . $coverage->deductible;
+							$last_payment_date = Carbon::parse($action->user->profile->dob)->addYears(70)->format('d/m/Y');
+						} elseif ($coverage->product_name == 'Accident') {
+							$last_payment_date = Carbon::parse($action->user->profile->dob)->addYears(70)->format('d/m/Y');
+						} elseif ($coverage->product_name == 'Disability') {
+							$last_payment_date = Carbon::parse($action->user->profile->dob)->addYears(70)->format('d/m/Y');
+						} elseif ($coverage->product_name == 'Death') {
+							$last_payment_date = Carbon::parse($action->user->profile->dob)->addYears(100)->format('d/m/Y');
+						} elseif ($coverage->product_name == 'Critical Illness') {
+							$last_payment_date = Carbon::parse($action->user->profile->dob)->addYears(100)->format('d/m/Y');
+						}
+						$tpd_c = NULL;
+						$cil_c = NULL;
+						$dth_c = NULL;
+						$add_c = NULL;
+						// foreach ($action->user->profile->coverages_owner ?? [] as $cov) {
+						// 	if ($cov->product_name == 'Accident') {
+						// 		$add_c = $cov->RealCoverage;
+						// 	} elseif ($cov->product_name == 'Disability') {
+						// 		$tpd_c = $cov->RealCoverage;
+						// 	} elseif ($cov->product_name == 'Death') {
+						// 		$dth_c = $cov->RealCoverage;
+						// 	} elseif ($cov->product_name == 'Critical Illness') {
+						// 		$cil_c = $cov->RealCoverage;
+						// 	}
+						// }
+						if ($coverage->product_name == 'Accident') {
+							$add_c = $coverage->RealCoverage;
+						} elseif ($coverage->product_name == 'Disability') {
+							$tpd_c = $coverage->RealCoverage;
+						} elseif ($coverage->product_name == 'Death') {
+							$dth_c = $coverage->RealCoverage;
+						} elseif ($coverage->product_name == 'Critical Illness') {
+							$cil_c = $coverage->RealCoverage;
+						}
+
+						array_push($data, [
+							'serial_number'    => $action->id,
+							'action'           => $actionType,
+							'no'               => $coverage->pl_no,
+							//missing columns fixes 
+							'effective_date'   => Carbon::parse($coverage->first_payment_on)->format('d/m/Y'),
+							'last_payment_date'   => $last_payment_date,
+							'next_payment_date'   => Carbon::parse($coverage->next_payment_on)->format('d/m/Y'),
+							'name'             => $action->user->profile->name,
+							'dependent_name'   => NULL,
+							'relationship'     => NULL,
+							'principal_ic'     => $action->user->profile->nric,
+							'dependent_ic'     => NULL,
+							'dob'              => Carbon::parse($action->user->profile->dob)->format('d/m/Y'),
+							'gender'           => $action->user->profile->gender,
+							// 'company_name'     => $action->user->profile->occupation['job']->industry->name,
+							'company_name'     => NULL,
+							'subsidiary_name'  => NULL,
+							'department_name'  => NULL,
+							'employee_no'      => NULL,
+							'category'         => $cov_product[$coverage->product_name] ?? $coverage->product_name,
+							'plan'             => $plan,
+							'plan_description' => $plan_description,
+							// 'coverage'         =>  $coverage->coverage,
+							'tpd_coverage'         =>  $tpd_c,
+							'cil_coverage'         =>  $cil_c,
+							'dth_coverage'         =>  $dth_c,
+							'add_coverage'         =>  $add_c,
+							'premium' 		   => $coverage->payment_annually,
+							'bank_name'        => $action->user->profile->bankAccounts()->latest()->first()->bank_name,
+							'account_no'       => $action->user->profile->bankAccounts()->latest()->first()->account_no,
+							'email'            => $action->user->email,
+							// 'hand_phone'       => $action->user->profile->mobile ?? NULL,
+							// 'remarks'          => NULL,
+							// 'cost_centre'      => NULL,
+							// 'branch_name'      => NULL,
+							// 'position'         => NULL,
+						]);
+						$gg++;
+					}
+				}
+
+				if ($action->type == Enum::ACTION_TYPE_TERMINATE) {
+					$checkTerminate      = TRUE;
+					$checkMemberAddition = FALSE;
+					$checkAmendment      = FALSE;
+					$checkPlanChange     = FALSE;
+				}
+
+				if ($checkTerminate) {
+					continue;
+				}
+			}
+			// $gg++;
+			// if ($gg > 0)
+			// 	break;
+		}
+
+		// dd('Finished');
+		// dd($data);
+
+		$spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+		$sheet       = $spreadsheet->getActiveSheet();
+
+		$rowCount = 1;
+		foreach ($data as $items) {
+			$sheet->setCellValue('A' . $rowCount, $rowCount);
+			$sheet->setCellValue('B' . $rowCount, $items['action']);
+			$sheet->setCellValue('C' . $rowCount, $items['no']);
+			$sheet->setCellValue('D' . $rowCount, $items['effective_date']);
+			$sheet->setCellValue('E' . $rowCount, $items['last_payment_date']);
+			$sheet->setCellValue('F' . $rowCount, $items['next_payment_date']);
+			$sheet->setCellValue('G' . $rowCount, $items['name']);
+			$sheet->setCellValue('H' . $rowCount, $items['dependent_name']);
+			$sheet->setCellValue('I' . $rowCount, $items['relationship']);
+			$sheet->setCellValue('J' . $rowCount, $items['principal_ic']);
+			$sheet->setCellValue('K' . $rowCount, $items['dependent_ic']);
+			$sheet->setCellValue('L' . $rowCount, $items['dob']);
+			$sheet->setCellValue('M' . $rowCount, $items['gender']);
+			$sheet->setCellValue('N' . $rowCount, $items['company_name']);
+			$sheet->setCellValue('O' . $rowCount, $items['subsidiary_name']);
+			$sheet->setCellValue('P' . $rowCount, $items['department_name']);
+			$sheet->setCellValue('Q' . $rowCount, $items['employee_no']);
+			$sheet->setCellValue('R' . $rowCount, $items['category']);
+			$sheet->setCellValue('S' . $rowCount, $items['plan']);
+			$sheet->setCellValue('T' . $rowCount, $items['plan_description']);
+			// $sheet->setCellValue('U' . $rowCount, $items['coverage']);
+			//Fix for showing Premium
+			$sheet->setCellValue('U' . $rowCount, $items['tpd_coverage']);
+			$sheet->setCellValue('V' . $rowCount, $items['cil_coverage']);
+			$sheet->setCellValue('W' . $rowCount, $items['dth_coverage']);
+			$sheet->setCellValue('X' . $rowCount, $items['add_coverage']);
+			// $sheet->setCellValue('Y' . $rowCount, $items['premium']);
+			//			$sheet->setCellValue('S' . $rowCount,$items['plan_description']);
+			$sheet->setCellValue('Y' . $rowCount, $items['bank_name']);
+			$sheet->setCellValue('Z' . $rowCount, $items['account_no']);
+			$sheet->setCellValue('AA' . $rowCount, $items['email']);
+			// $sheet->setCellValue('X' . $rowCount, $items['hand_phone']);
+			// $sheet->setCellValue('Y' . $rowCount, $items['remarks']);
+			// $sheet->setCellValue('Z' . $rowCount, $items['cost_centre']);
+			// $sheet->setCellValue('AA' . $rowCount, $items['branch_name']);
+			// $sheet->setCellValue('AB' . $rowCount, $items['position']);
+			$rowCount++;
+		}
+
+		$writer = new \PhpOffice\PhpSpreadsheet\Writer\Csv($spreadsheet);
+		$writer->setDelimiter('|');
+		$writer->setEnclosure('');
+		$writer->setLineEnding("\r\n");
+
+		$filename = str_replace(".", "", date('d-m-y-' . substr((string)microtime(), 1, 8))) . ".txt";
+
+		header('X-Vapor-Base64-Encode:true');
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Type: application/csv');
+		header("Content-Disposition: attachment; filename={$filename}");
+		$writer->save("php://output");
+	}
+
+	/*public function exportCsv()
+	{
+		$actions = Action::query()
+			->where('status', Enum::ACTION_STATUS_EXECUTED)
+			//->whereBetween('created_at',[Carbon::now()->startOfDay(),Carbon::now()->endOfDay()])
+			->orderBy('created_at', 'asc')
+			->get();
+
+		if (empty($actions)) {
+			return;
+		}
+
+		$data        = [];
+		$actionUsers = [];
+
+		foreach ($actions as $action) {
+			if (isset($actionUsers[$action->user_id])) {
+				array_push($actionUsers[$action->user_id], $action->id);
+			} else {
+				$actionUsers[$action->user_id] = [];
+				array_push($actionUsers[$action->user_id], $action->id);
+			}
+		}
+
+		foreach ($actionUsers as $actionUser) {
+			$checkMemberAddition = FALSE;
+			$checkTerminate      = FALSE;
+			$checkAmendment      = FALSE;
+			$checkPlanChange     = FALSE;
+			$oldDeductible       = 0;
+
+			foreach ($actionUser as $actionId) {
+				$action = Action::find($actionId);
+
+				$coverage = $action->coverages()
+					->where('product_name', 'Medical')
+					->whereIn('status', [Enum::COVERAGE_STATE_ACTIVE, Enum::COVERAGE_STATUS_DECREASE_UNPAID])
+					->orderBy('created_at', 'desc')
+					->first();
+
+				if (empty($coverage)) {
+					$coverage = $action->user->profile->coverages_owner()
+						->where('product_name', 'Medical')
+						->where('state', Enum::COVERAGE_STATE_ACTIVE)
+						->orderBy('created_at', 'desc')
+						->first();
+				}
+
+				if (empty($coverage)) {
+					continue;
+				}
+
+				if (!$checkMemberAddition && ($action->type == Enum::ACTION_TYPE_PARTICULAR_CHANGE || $action->type == Enum::ACTION_TYPE_BANK_INFO)) {
+					continue;
+				} else {
+					$checkMemberAddition = TRUE;
+				}
+
+				if ($action->type == Enum::ACTION_TYPE_MEMEBR_ADDITION) {
+					$checkTerminate = FALSE;
+				}
+
+				if (!$checkTerminate) {
+					if (!empty($coverage)) {
+
+						if (!$checkAmendment && ($action->type == Enum::ACTION_TYPE_PARTICULAR_CHANGE || $action->type == Enum::ACTION_TYPE_BANK_INFO)) {
+							$checkAmendment = TRUE;
+						} elseif ($checkAmendment && ($action->type == Enum::ACTION_TYPE_PARTICULAR_CHANGE || $action->type == Enum::ACTION_TYPE_BANK_INFO)) {
+							continue;
+						}
+
+						if (!$checkPlanChange && ($action->type == Enum::ACTION_TYPE_PLAN_CHANGE)) {
+							$checkPlanChange = TRUE;
+							$oldDeductible   = $coverage->deductible;
+						} elseif ($checkPlanChange && ($action->type == Enum::ACTION_TYPE_PLAN_CHANGE) && ($oldDeductible != $coverage->deductible)) {
+							$oldDeductible = $coverage->deductible;
+						} elseif ($checkPlanChange && ($action->type == Enum::ACTION_TYPE_PLAN_CHANGE) && ($oldDeductible == $coverage->deductible)) {
+							continue;
+						}
+
+						if ($action->type == Enum::ACTION_TYPE_PARTICULAR_CHANGE || $action->type == Enum::ACTION_TYPE_BANK_INFO) {
+							$actionType = Enum::ACTION_TYPE_AMENDMENT;
+						} else {
+							$actionType = $action->type;
+						}
+
+						array_push($data, [
+							'no'               => $action->user->ref_no,
+							'action'           => $actionType,
+							'category'         => 'DT' . $coverage->deductible,
+							'effective_date'   => Carbon::parse($coverage->last_payment_on)->format('d/m/y'),
+							'name'             => $action->user->profile->name,
+							'dependent_name'   => NULL,
+							'relationship'     => NULL,
+							'principal_ic'     => $action->user->profile->nric,
+							'dependent_ic'     => NULL,
+							'dob'              => Carbon::parse($action->user->profile->dob)->format('d/m/y'),
+							'gender'           => $action->user->profile->gender,
+							'company_name'     => NULL,
+							'subsidiary_name'  => NULL,
+							'department_name'  => NULL,
+							'employee_no'      => NULL,
+							'plan'             => 'Decutible ' . $coverage->deductible,
+							'plan_description' => 'Decutible ' . $coverage->deductible,
+							'bank_name'        => $action->user->profile->bankAccounts()->latest()->first()->bank_name,
+							'account_no'       => $action->user->profile->bankAccounts()->latest()->first()->account_no,
+							'email'            => $action->user->email,
+							'remarks'          => NULL,
+							'cost_centre'      => NULL,
+							'branch_name'      => NULL,
+							'position'         => NULL,
+						]);
+					}
+				}
+
+				if ($action->type == Enum::ACTION_TYPE_TERMINATE) {
+					$checkTerminate      = TRUE;
+					$checkMemberAddition = FALSE;
+					$checkAmendment      = FALSE;
+					$checkPlanChange     = FALSE;
+				}
+
+				if ($checkTerminate) {
+					continue;
+				}
+			}
+		}
+
+		$spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+		$sheet       = $spreadsheet->getActiveSheet();
+
+		$rowCount = 1;
+		foreach ($data as $items) {
+			$sheet->setCellValue('A' . $rowCount, $items['no']);
+			$sheet->setCellValue('B' . $rowCount, $items['action']);
+			$sheet->setCellValue('C' . $rowCount, $items['category']);
+			$sheet->setCellValue('D' . $rowCount, $items['effective_date']);
+			$sheet->setCellValue('E' . $rowCount, $items['name']);
+			$sheet->setCellValue('F' . $rowCount, $items['dependent_name']);
+			$sheet->setCellValue('G' . $rowCount, $items['relationship']);
+			$sheet->setCellValue('H' . $rowCount, $items['principal_ic']);
+			$sheet->setCellValue('I' . $rowCount, $items['dependent_ic']);
+			$sheet->setCellValue('J' . $rowCount, $items['dob']);
+			$sheet->setCellValue('K' . $rowCount, $items['gender']);
+			$sheet->setCellValue('L' . $rowCount, $items['company_name']);
+			$sheet->setCellValue('M' . $rowCount, $items['subsidiary_name']);
+			$sheet->setCellValue('N' . $rowCount, $items['department_name']);
+			$sheet->setCellValue('O' . $rowCount, $items['employee_no']);
+			$sheet->setCellValue('P' . $rowCount, $items['plan']);
+			$sheet->setCellValue('Q' . $rowCount, $items['plan_description']);
+			$sheet->setCellValue('R' . $rowCount, $items['bank_name']);
+			$sheet->setCellValue('S' . $rowCount, $items['account_no']);
+			$sheet->setCellValue('T' . $rowCount, $items['email']);
+			$sheet->setCellValue('U' . $rowCount, $items['remarks']);
+			$sheet->setCellValue('W' . $rowCount, $items['cost_centre']);
+			$sheet->setCellValue('X' . $rowCount, $items['branch_name']);
+			$sheet->setCellValue('Y' . $rowCount, $items['position']);
+			$rowCount++;
+		}
+
+		$writer = new \PhpOffice\PhpSpreadsheet\Writer\Csv($spreadsheet);
+		$writer->setDelimiter('|');
+		$writer->setEnclosure('');
+		$writer->setLineEnding("\r\n");
+
+		$filename = str_replace(".", "", date('d-m-y-' . substr((string)microtime(), 1, 8))) . ".txt";
+
+		header('X-Vapor-Base64-Encode:true');
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Type: application/csv');
+		header("Content-Disposition: attachment; filename={$filename}");
+		$writer->save("php://output");
+	} */
+}

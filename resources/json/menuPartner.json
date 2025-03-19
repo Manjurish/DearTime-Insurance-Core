@@ -1,0 +1,10 @@
+{"menu": [
+    {"route":"userpanel.dashboard.main", "name":"dashboard", "icon":"feather icon-briefcase"},
+    {"route":"partner.User.index", "name":"users", "icon":"feather icon-users",
+        "submenu": [
+            {"route":"partner.User.index", "name":"users", "icon":"feather icon-users"},
+            {"route":"partner.Role.index", "name":"roles", "icon":"feather icon-lock"}
+            ]}
+
+]
+}

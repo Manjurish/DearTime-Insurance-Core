@@ -1,0 +1,144 @@
+<?php     
+
+namespace App\Http\Controllers\Admin;
+
+use App\Coverage;
+use App\Helpers;
+use Carbon\Carbon;
+use Mmeshkatian\Ariel\BaseController;
+use Illuminate\Http\Request;
+use DB;
+use DataTables;
+
+class CoverageController extends ArielController
+{
+    public function configure()
+    {
+        $this->model = Coverage::class;
+        $this->setTitle("Coverage");
+//        $this->addQueryCondition('where',['status','!=','Cancelled']);
+
+        $this->addColumn("RefNo",'ref_no');
+        $this->addColumn("Owner",function ($q){
+            return '<a href="'.route('admin.User.show',$q->owner->user->uuid ?? '').'">'.($q->owner->name . '<br><small style="color: #005eea">' .$q->owner->user->ref_no.'</small>' ?? '')."</a>";
+        });
+        $this->addColumn("Product",'product_name');
+        $this->addColumn("Status",'status');
+        $this->addColumn("State",'state');
+        $this->addColumn("Payment Term",'payment_term');
+        $this->addColumn("Coverage",function ($q){
+            return 'RM'.number_format($q->coverage,2);
+        });
+        $this->addColumn( __('web/messages.created_at'),function ($q){
+            return Carbon::parse($q->created_at)->format(config('static.datetime_format'));
+        });
+        $this->addColumn( __('web/messages.payment_at'),function ($q){
+			if($q->last_payment_on){
+				return Carbon::parse($q->last_payment_on)->format(config('static.datetime_format'));
+			}else{
+				return '-';
+			}
+        });
+        $this->addColumn("Premium",function ($q){
+            return $q->payment_term == 'monthly' ? 'RM'.number_format($q->payment_monthly,2) : 'RM'.number_format($q->payment_annually,2);
+        });
+
+
+        $this->addAction('admin.Coverage.show','<i class="feather icon-eye"></i>','View Details',['$uuid'],Helpers::getAccessControlMethod());
+
+        $this->addBladeSetting('hideCreate',true);
+
+        return $this;
+
+    }
+    public function show($id)
+    {
+        if(is_numeric($id))
+            $data = Coverage::where("id",$id);
+        else
+            $data = Coverage::where("uuid",$id);
+
+        $data = $data->get()->first();
+        empty(($data));
+
+        $coverage = $data;
+        return view('admin.coverage-details',compact('coverage'));
+    }
+
+
+    public function index(Request $request)
+    {
+
+        $this->getConfig();
+        $my_columns = [];
+        $cfg_cols =
+            $this->get('cols');;
+        $acts = $this->get('actions');
+        $actions = [];
+        $c = 1;
+        // dd($cfg_cols);
+
+
+        foreach ($cfg_cols as $mycol) {
+            if ($mycol->value ?? NULL) {
+                if ($mycol->value instanceof \Closure) continue;
+                $c++;
+            
+                $my_columns[] = $mycol->value . ' as c_' . $c;
+                // $my_columns[] = $mycol->value;
+            }
+        }
+
+        // dd($my_columns);
+
+        $act_c = 'c_' . ($c + 1);
+
+
+        $cols_query = '';
+        if (!empty($my_columns)) {
+            $my_columns[] = 'uuid';
+            $cols_query = DB::raw(implode(', ', $my_columns));
+        } else {
+            $cols_query = '*';
+        }
+
+
+        if ($request->ajax()) {
+            // dd($request);
+            $data = $this->model::select($cols_query)->latest()->get();
+            dd($data);
+            $datatables = Datatables::of($data)
+                ->addIndexColumn('c_1');
+            if (!empty($acts)) {
+                $datatables->addColumn(
+                    $act_c,
+                    function ($row) use ($acts) {
+                        $btn = '';
+                        foreach ($acts as $action) {
+                            // if (!$action->hasAccess($row)) {
+                            //     continue;
+                            // }
+                            if ($action->isGet()) {
+                                $btn .= '<a data-toggle="tooltip" class="' . ($action->options['class'] ?? '') . ' data-placement="top" title="' . ($action->caption ?? '') . '" style="margin-left: 10px" href="' . $action->getUrl($row) . '">' . ($action->icon ?? '') . '</a>';
+                            } else {
+                                $btn .= '<form data-toggle="tooltip" data-placement="top" class="' . ($action->options['class'] ?? '') . '" title="' . ($action->caption ?? '') . '" style="margin-left: 10px;display: inline" method="post" action="' . $action->getUrl($row) . '"> ' . method_field($action->method) . csrf_field() . ($action->icon ?? '') . ' </form>';
+                            }
+                        }
+                        return $btn;
+                    }
+                );
+                $datatables->rawColumns([$act_c]);
+            }
+            $datatables->removeColumn('uuid');
+            $datatables->make(true);
+            // $datatables->make(true);
+            return $datatables->toJson();
+        } else {
+            // dd($request->ajax());
+            return parent::index($request);
+        }
+    }
+
+
+    
+}

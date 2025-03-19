@@ -1,0 +1,21 @@
+id: 26509
+name: dev
+environments:
+    dev:
+        memory: 1024
+        storage: dt-insurance-dev-bucket
+        cli-memory: 2048
+        cli-timeout: 900
+        timeout: 300
+        runtime: docker
+        build:
+            - 'composer install --no-dev'
+            - 'php artisan event:cache'
+            - 'npm ci && npm run prod'
+            - 'composer require mediconesystems/livewire-datatables:0.9.4'
+        firewall:
+            rate-limit: 1000
+            bot-control:
+                - CategorySearchEngine
+                - CategorySocialMedia
+                - CategoryScrapingFramework

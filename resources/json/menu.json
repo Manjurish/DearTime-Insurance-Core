@@ -1,0 +1,166 @@
+{
+  "menu": [
+    {
+      "route": "admin.dashboard.main",
+      "name": "Dashboard",
+      "icon": "feather icon-briefcase"
+    },
+    {
+      "route": "admin.InternalUser.index",
+      "name": "Users",
+      "icon": "feather icon-user",
+      "submenu": [
+        {
+          "route": "admin.InternalUser.index",
+          "name": "Users List",
+          "icon": "feather icon-list"
+        },
+        {
+          "route": "admin.Role.index",
+          "name": "Roles List",
+          "icon": "feather icon-list"
+        }
+      ]
+    },
+    {
+      "route": "admin.User.index",
+      "name": "Customers",
+      "icon": "feather icon-users",
+      "submenu": [
+        {
+          "route": "admin.User.index",
+          "name": "Customers List",
+          "icon": "feather icon-list"
+        },
+        {
+          "route": "admin.corporates.index",
+          "name": "Corporates List",
+          "icon": "feather icon-list"
+        },
+        {
+          "route": "admin.Verification.index",
+          "name": "eKYC",
+          "icon": "feather icon-users"
+        },
+        
+        {
+          "route": "admin.Underwriting.index",
+          "name": "Underwritings",
+          "icon": "feather icon-layers"
+        }
+      ]
+    },
+    {
+      "route": "admin.credits.index",
+      "name": "Finance",
+      "icon": "feather icon-credit-card",
+      "submenu": [
+        {
+          "route": "admin.credits.index",
+          "name": "Credits",
+          "icon": "feather icon-list"
+        },
+        {
+          "route": "admin.refunds.index",
+          "name": "Refunds",
+          "icon": "feather icon-list"
+        }
+      ]
+    },
+    {
+      "route": "admin.spo.index",
+      "name": "Sponsored Insurance ",
+      "icon": "feather icon-list",
+      "submenu": [
+        {
+          "route": "admin.Spo.dashboard",
+          "name": "Sponsored Dashboard",
+          "icon": "feather icon-list"
+        },
+        {
+          "route": "admin.spo.index",
+          "name": "Sponsored Insurance Applicants List",
+          "icon": "feather icon-list"
+        }
+        
+      ]
+    },
+     {
+      "route": "admin.referral.index",
+      "name": "Referral ",
+      "icon": "feather icon-list",
+      "submenu": [
+        {
+          "route": "admin.referral.index",
+          "name": "Referrer List",
+          "icon": "feather icon-list"
+        }
+        
+      ]
+    },
+    {
+      "route": "admin.claim.index",
+      "name": "Claim",
+      "icon": "feather icon-users"
+    },
+    {
+      "route": "admin.SanctionScreen.index",
+      "name": "Screening",
+      "icon": "feather icon-search"
+    },
+    {
+      "route": "admin.reports.index",
+      "name": "Reporting",
+      "icon": "feather icon-bar-chart-line"
+    },
+    {
+      "route": "admin.Payment.index",
+      "name": "Transactions",
+      "icon": "feather icon-dollar-sign"
+    },
+    {
+      "route": "admin.Coverage.index",
+      "name": "Coverages",
+      "icon": "feather icon-layers"
+    },
+    {
+      "route": "admin.Notification.create",
+      "name": "Notification",
+      "icon": "feather icon-mail",
+      "submenu":
+      [
+        {
+            "route": "admin.Notification.index",
+            "name": "Notifications List",
+            "icon": "feather icon-list"
+        },
+        {
+            "route": "admin.Notification.create",
+            "name": "Send Notification",
+            "icon": "feather icon-send"
+        }
+      ]
+    },
+    {
+      "route": "admin.Config.index",
+      "name": "Setting",
+      "icon": "feather icon-sliders"
+    },
+    {
+      "route": "admin.reports.export.csv",
+      "name": "Export Member Data",
+      "icon": "feather icon-gear"
+    },
+    {
+      "route": "admin.claims.import",
+      "name": "Claim Data Import",
+      "icon": "feather icon-gear"
+    },
+     
+    {
+      "route": "admin.precal.view",
+      "name": "Premium Calculator",
+      "icon": "feather icon-gear"
+    }
+  ]
+}

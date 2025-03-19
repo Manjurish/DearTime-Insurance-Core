@@ -1,0 +1,7 @@
+{"menu": [
+    {"route":"userpanel.dashboard.main", "name":"dashboard", "icon":"feather icon-briefcase"},
+    {"route":"userpanel.dashboard.profile", "name":"profile", "icon":"feather icon-user"},
+    {"route":"userpanel.clinic.review", "name":"answer_uw", "icon":"feather icon-shopping-cart"},
+    {"route":"userpanel.hospital.claim", "name":"claim", "icon":"feather icon-shopping-cart"}
+]
+}

@@ -1,0 +1,8 @@
+http://13.213.80.178:5000/compare
+
+{
+    "bucket": "dt-insurance-dev-bucket",
+    "selfie": "documents/2021-12-26/1FuJojhqFZ80jZxiojv8TbObEZBbWpCYT7pPUcGk.png",
+    "mykad": "documents/2021-12-22/QczVEqXgPVBeFgGLETyFd0Ko1WNNFd3MpMWGRXIT.png",
+    "user": "85ce7cce-a683-4080-9e10-b127e41f9ce1"
+  }

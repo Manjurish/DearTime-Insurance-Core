@@ -1,0 +1,21 @@
+
+  [
+    {
+        "id":"1",
+    "name":"Salary slip"
+  },
+  {"id":"2",
+    "name":"Latest Income Tax Return form"
+  },
+  {"id":"3",
+  "name":"Bank Statement"
+},
+{"id":"4",
+"name":"JKM Approval Document "
+},
+{"id":"5",
+"name":"Latest EPF statement "
+}
+
+
+  ]  

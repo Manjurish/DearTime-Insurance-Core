@@ -1,0 +1,5 @@
+{"menu": [
+    {"route":"userpanel.clinic.review", "name":"answer_uw", "icon":"feather icon-shopping-cart"},
+    {"route":"userpanel.hospital.claim", "name":"claim", "icon":"feather icon-shopping-cart"}
+]
+}

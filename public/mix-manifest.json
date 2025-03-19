@@ -1,0 +1,16 @@
+{
+    "/js/app.js": "/js/app.js",
+    "/css/bootstrap.css": "/css/bootstrap.css",
+    "/css/bootstrap-extended.css": "/css/bootstrap-extended.css",
+    "/css/colors.css": "/css/colors.css",
+    "/css/components.css": "/css/components.css",
+    "/css/themes/dark-layout.css": "/css/themes/dark-layout.css",
+    "/css/themes/semi-dark-layout.css": "/css/themes/semi-dark-layout.css",
+    "/css/pages/authentication.css": "/css/pages/authentication.css",
+    "/css/pages/app-ecommerce-shop.css": "/css/pages/app-ecommerce-shop.css",
+    "/css/pages/data-list-view.css": "/css/pages/data-list-view.css",
+    "/css/core/menu/menu-types/vertical-menu.css": "/css/core/menu/menu-types/vertical-menu.css",
+    "/css/core/menu/menu-types/horizontal-menu.css": "/css/core/menu/menu-types/horizontal-menu.css",
+    "/css/core/colors/palette-gradient.css": "/css/core/colors/palette-gradient.css",
+    "/css/tailwind.css": "/css/tailwind.css"
+}
